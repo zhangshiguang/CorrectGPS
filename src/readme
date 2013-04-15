@@ -1,0 +1,50 @@
+correctgps 是一个对百度地图坐标纠偏成GPS坐标的daemon服务程序；
+纠偏来参考数据来自mysql数据库，程序采用mysql c connector driver；
+采用epoll技术，监听来自手机客户端的导航指令：包含百度坐标等，纠偏后转发给车载后台HTTP服务器（采用异步连接），并把返回结果回复给手机端。
+支持配置多个线程处理纠偏/转发/回复。
+支持配置最大连接数。
+作者：jordan zhang
+QQ：87895224
+如果想交流，请QQ联系。
+
+
+
+
+=====================================================
+配置文件： correctgps.conf
+
+
+查看系统日志 gedit /var/log/syslog
+
+
+把libmysql.so.16 所在路径加入到 /var/ld.so.conf 中
+执行 ldconfig 
+
+
+
+例如脚本名称为nginx
+#!/bin/bash 
+# nginx service. 
+# chkconfig: 345 35 75 
+# description: a web server
+case "$1" in
+start)
+/usr/local/nginx/sbin/nginx
+echo "nginx start ok"
+;;
+restart)
+ps aux |grep nginx:|grep -v grep|awk '{print $2}'|awk '{printf("%s ",$1)}'|xargs kill -9
+/usr/local/nginx/sbin/nginx
+echo "nginx restart ok"
+;;
+stop)
+ps aux |grep nginx:|grep -v grep|awk '{print $2}'|awk '{printf("%s ",$1)}'|xargs kill -9
+echo "nginx stop ok"
+;;
+esac
+exit 0
+
+chkconfig --list|grep nginx
+chkconfig --add nginx
+chkconfig --levels 235 nginx on
+chkconfig --del nginx

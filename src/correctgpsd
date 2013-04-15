@@ -1,0 +1,26 @@
+#!/bin/bash 
+# cking settling service. 
+# author :zhangshiguang 
+# time:2012.12.09 PM 
+# description: a application server
+# usage:
+#chkconfig --list|grep correctgps
+#chkconfig --add correctgps
+#chkconfig --levels 235 correctgps on
+#chkconfig --del correctgps
+
+case "$1" in
+start)
+/usr/local/zsg/sbin/correctgps
+echo "correctgps start ok"
+;;
+restart)
+kill -HUP `ps aux | grep correctgps | grep -v grep | awk '{print $2}'`
+echo "correctgps restart ok"
+;;
+stop)
+kill -TERM `ps aux | grep correctgps | grep -v grep | awk '{print $2}'`
+echo "correctgps stop ok"
+;;
+esac
+exit 0
